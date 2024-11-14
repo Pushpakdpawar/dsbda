@@ -1,0 +1,66 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+at = pd.read_csv(r"C:\Users\Shree\Desktop\atharva\DSBDA\datasets\AirQuality_visualization.csv",sep=';')
+at
+
+
+at = at.rename(columns={'T': 'Temperature'})
+at = at.rename(columns={'RH': 'Relative Humidity'})
+at = at.rename(columns={'AH': 'Absolute Humidity'})
+at
+
+at['CO(GT)'] = at['CO(GT)'].str.replace(',', '.').astype(float)
+at['C6H6(GT)'] = at['C6H6(GT)'].str.replace(',', '.').astype(float)
+at['Temperature'] = at['Temperature'].str.replace(',', '.').astype(float)
+at['Relative Humidity'] = at['Relative Humidity'].str.replace(',', '.').astype(float)
+at['Absolute Humidity'] = at['Absolute Humidity'].str.replace(',', '.').astype(float)
+
+
+at=at.drop_duplicates()
+at.isna().sum()
+
+
+at = at.fillna(at.mean())
+at = at.dropna()
+at.isna().sum()
+
+at
+
+sns.scatterplot(x='PT08.S1(CO)', y='NMHC(GT)', data=at[:80])
+plt.title('Temperature vs. Area')
+plt.xlabel('Temperature')
+plt.ylabel('Area')
+
+sns.countplot(x='NMHC(GT)', data=at[:10])
+
+sns.kdeplot(data=at['PT08.S1(CO)'])
+plt.title('Kernel Density Estimate of NMHC(GT)')
+plt.xlabel('NMHC(GT)')
+
+plt.figure(figsize=(8, 6))
+sns.histplot(data=at[:1000], x='PT08.S1(CO)')
+
+
+sns.barplot(data=at[:80], x='PT08.S1(CO)', y='NMHC(GT)', errorbar=None)
+
+
+sns.boxplot(x='PT08.S1(CO)', y='NMHC(GT)', data=at[:5])
+
+plt.figure(figsize=(10, 8))
+corr = at.corr()
+sns.heatmap(corr, annot=True, cmap='YlGn')
+
+
+
+sns.lineplot(data=at[:35], x='PT08.S1(CO)', y='NMHC(GT)', estimator='mean')
+plt.grid(True)
+
+
+
+
+
+
+
